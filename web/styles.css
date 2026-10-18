@@ -55,6 +55,44 @@ h2 {
   color: var(--ink-2);
 }
 
+.title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 6px;
+}
+
+.title-row h1 {
+  margin: 0;
+}
+
+.social {
+  display: flex;
+  gap: 4px;
+  flex: none;
+}
+
+.social a {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  color: var(--ink-2);
+}
+
+.social a:hover,
+.social a:focus-visible {
+  background: var(--track);
+  color: var(--ink);
+}
+
+.social svg {
+  width: 20px;
+  height: 20px;
+}
+
 .lede {
   color: var(--ink-2);
   margin: 0 0 24px;
