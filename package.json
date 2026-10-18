@@ -8,6 +8,7 @@
     "evaluate": "bun src/evaluate.ts",
     "visualize": "bun src/visualize.ts",
     "serve": "bun src/server.ts",
+    "build": "bun build web/index.html --outdir dist --minify",
     "test": "bun test",
     "typecheck": "tsc --noEmit"
   },

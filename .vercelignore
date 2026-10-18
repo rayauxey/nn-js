@@ -1,0 +1,6 @@
+# Upload only what the deployment needs.
+data
+history.json
+nn-visualization.pdf
+dist
+.claude
