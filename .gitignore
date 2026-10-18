@@ -37,3 +37,5 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 # MNIST data and trained model
 data
 model.json
+history.json
+nn-visualization.html

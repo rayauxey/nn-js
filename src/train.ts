@@ -14,6 +14,7 @@ const CONFIG = {
   validationSize: 5000,
   seed: 42,
   modelPath: "model.json",
+  historyPath: "history.json",
 };
 
 const { train: fullTrain, test } = await loadMnist();
@@ -28,6 +29,7 @@ const inputSize = train.inputSize;
 const batchInput = new Float32Array(CONFIG.batchSize * inputSize);
 const batchLabels = new Uint8Array(CONFIG.batchSize);
 let bestValAcc = 0;
+const history: { epoch: number; loss: number; valAcc: number }[] = [];
 
 for (let epoch = 1; epoch <= CONFIG.epochs; epoch++) {
   rng.shuffle(order);
@@ -63,12 +65,16 @@ for (let epoch = 1; epoch <= CONFIG.epochs; epoch++) {
       `val acc ${(valAcc * 100).toFixed(2)}%  (${seconds}s)`,
   );
 
+  history.push({ epoch, loss: lossSum / batches, valAcc });
+
   // Keep the checkpoint that does best on the validation set.
   if (valAcc > bestValAcc) {
     bestValAcc = valAcc;
     await Bun.write(CONFIG.modelPath, JSON.stringify(net));
   }
 }
+
+await Bun.write(CONFIG.historyPath, JSON.stringify(history, null, 2));
 
 const best = MLP.fromJSON((await Bun.file(CONFIG.modelPath).json()) as MLPJSON);
 console.log(`\nBest validation accuracy: ${(bestValAcc * 100).toFixed(2)}%`);

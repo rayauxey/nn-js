@@ -6,6 +6,7 @@
   "scripts": {
     "train": "bun src/train.ts",
     "evaluate": "bun src/evaluate.ts",
+    "visualize": "bun src/visualize.ts",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {

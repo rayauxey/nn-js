@@ -8,6 +8,7 @@ A fully connected neural network in TypeScript (no ML libraries) that classifies
 bun install
 bun run train      # downloads MNIST into data/ on first run, saves model.json
 bun run evaluate   # test accuracy + a few ASCII-rendered predictions
+bun run visualize  # builds nn-visualization.pdf from model.json + history.json (needs Chrome)
 ```
 
 Set `EPOCHS=3 bun run train` for a quicker run. Expected test accuracy is ~98%.
@@ -18,4 +19,5 @@ Set `EPOCHS=3 bun run train` for a quicker run. Expected test accuracy is ~98%.
 - `src/mnist.ts` – downloads and parses the IDX files
 - `src/train.ts` – training loop with validation split and best-checkpoint saving
 - `src/evaluate.ts` – accuracy helper and evaluation CLI
+- `src/visualize.ts` – 5-page PDF explaining the trained network
 - `src/random.ts` – seeded RNG (uniform, gaussian, shuffle)
