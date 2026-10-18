@@ -1,0 +1,10 @@
+{
+  "name": "nn-js",
+  "module": "src/train.ts",
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest",
+    "typescript": "^7"
+  }
+}
