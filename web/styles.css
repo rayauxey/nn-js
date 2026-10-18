@@ -9,6 +9,7 @@
   --track: #f0efec;
   --accent: #2a78d6;
   --accent-soft: #9ec5f4;
+  --negative: #e06b5f;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -23,6 +24,7 @@
     --track: #2c2c2a;
     --accent: #3987e5;
     --accent-soft: #184f95;
+    --negative: #e66767;
   }
 }
 
@@ -275,4 +277,43 @@ button:hover,
 .bars .value {
   color: var(--ink-2);
   text-align: right;
+}
+
+.network-panel {
+  margin-top: 16px;
+}
+
+.network-hint {
+  margin: -4px 0 12px;
+}
+
+.network-wrap {
+  width: 100%;
+}
+
+#network {
+  display: block;
+  width: 100%;
+}
+
+.network-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+
+.network-legend .swatch {
+  display: inline-block;
+  width: 18px;
+  height: 3px;
+  border-radius: 2px;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+
+.network-legend .muted {
+  color: var(--muted);
 }

@@ -1,6 +1,7 @@
 // Drawing pad + image upload -> MNIST-style 28x28 input -> /api/predict.
 
 import { MNIST_SIZE, toMnist } from "../src/preprocess.ts";
+import { NetworkView, type NetworkResult } from "./network-view.ts";
 
 const MAX_SOURCE = 400; // uploaded images are downscaled to this before processing
 const STROKE_WIDTH = 22;
@@ -14,6 +15,7 @@ const confidenceEl = $<HTMLDivElement>("confidence");
 const barsEl = $<HTMLOListElement>("bars");
 const padCtx = pad.getContext("2d", { willReadFrequently: true })!;
 const previewCtx = preview.getContext("2d")!;
+const networkView = new NetworkView($<HTMLCanvasElement>("network"));
 
 // Image currently being classified: the pad itself, or an uploaded image.
 let uploaded: HTMLCanvasElement | null = null;
@@ -27,7 +29,7 @@ const bars = Array.from({ length: 10 }, (_, d) => {
   return { li, fill: li.querySelector<HTMLElement>(".fill")!, value: li.querySelector<HTMLElement>(".value")! };
 });
 
-function showResult(result: { prediction: number; probabilities: number[] } | null, message?: string) {
+function showResult(result: NetworkResult | null, message?: string) {
   bars.forEach((b, d) => {
     const p = result?.probabilities[d] ?? 0;
     b.fill.style.width = `${p * 100}%`;
@@ -78,6 +80,7 @@ async function classify() {
     drawPreview(pixels);
     if (!pixels) {
       showResult(null, uploaded ? "Couldn't find a digit in that image" : "Draw something to start");
+      networkView.clear();
       return;
     }
     const res = await fetch("/api/predict", {
@@ -86,9 +89,12 @@ async function classify() {
       body: JSON.stringify({ pixels: Array.from(pixels) }),
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    showResult(await res.json());
+    const result = (await res.json()) as NetworkResult;
+    showResult(result);
+    networkView.update(pixels, result);
   } catch (err) {
     showResult(null, `Prediction failed: ${(err as Error).message}`);
+    networkView.clear();
   } finally {
     pending = false;
     if (queued) {

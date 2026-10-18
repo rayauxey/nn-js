@@ -62,6 +62,17 @@
           <ol id="bars" class="bars"></ol>
         </section>
       </div>
+
+      <section class="panel network-panel">
+        <h2>4 · Inside the network</h2>
+        <p class="hint network-hint">Each prediction flows left to right. Neurons glow by how strongly they fire, and the lines are the connections that contributed most to the next layer.</p>
+        <div class="network-wrap"><canvas id="network" aria-label="Live view of the network's layers during a prediction"></canvas></div>
+        <div class="network-legend">
+          <span><i class="swatch" style="background: var(--accent)"></i>pushes the next neuron up</span>
+          <span><i class="swatch" style="background: var(--negative)"></i>pushes it down</span>
+          <span class="muted">line strength = weight × activation</span>
+        </div>
+      </section>
     </main>
     <script type="module" src="./app.ts"></script>
   </body>
