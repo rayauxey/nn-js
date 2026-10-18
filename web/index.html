@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Digit Classifier</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Handwritten digit classifier</h1>
+        <p class="lede">
+          Draw a digit (0–9) in the box, or drop in a photo or scan of one. The network sees
+          only the 28×28 image in the middle.
+        </p>
+      </header>
+
+      <div class="layout">
+        <section class="panel">
+          <h2>1 · Your digit</h2>
+          <div id="drop" class="drop">
+            <canvas id="pad" width="280" height="280" aria-label="Drawing area"></canvas>
+            <div class="drop-hint">Drop image here</div>
+          </div>
+          <div class="actions">
+            <button id="clear" type="button">Clear</button>
+            <label class="button">
+              Upload image…
+              <input id="file" type="file" accept="image/*" hidden />
+            </label>
+          </div>
+          <p class="hint">Write one large digit near the middle. For photos, use a single digit on plain paper.</p>
+        </section>
+
+        <section class="panel">
+          <h2>2 · What the network sees</h2>
+          <canvas id="preview" width="28" height="28" aria-label="28 by 28 network input"></canvas>
+          <p class="hint">Cropped, scaled to 20×20 and centered, the same way as the MNIST training images.</p>
+        </section>
+
+        <section class="panel">
+          <h2>3 · Prediction</h2>
+          <div class="result">
+            <div id="digit" class="digit">–</div>
+            <div id="confidence" class="confidence">Draw something to start</div>
+          </div>
+          <ol id="bars" class="bars"></ol>
+        </section>
+      </div>
+    </main>
+    <script type="module" src="./app.ts"></script>
+  </body>
+</html>

@@ -7,6 +7,8 @@
     "train": "bun src/train.ts",
     "evaluate": "bun src/evaluate.ts",
     "visualize": "bun src/visualize.ts",
+    "serve": "bun src/server.ts",
+    "test": "bun test",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
