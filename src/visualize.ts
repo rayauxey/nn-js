@@ -1,6 +1,7 @@
-// Builds a multi-page visual explanation of the trained network from
-// model.json + history.json, then prints it to nn-visualization.pdf
-// with headless Chrome.
+// Builds a visual explanation of the trained network from model.json +
+// history.json as a standalone web page (nn-visualization.html). The page
+// also prints as 5 A4 landscape pages; pass --pdf to render that to
+// nn-visualization.pdf with headless Chrome.
 
 import { deflateSync } from "node:zlib";
 import { loadMnist, type Dataset } from "./mnist.ts";
@@ -486,7 +487,8 @@ const accFloor = Math.floor(Math.min(...accs) * 100) / 100;
 const eq = (a: string, b: string, c: string) => `<tr><td class="m">${a}</td><td>${b}</td><td class="shape">${c}</td></tr>`;
 
 const html = `<!doctype html>
-<html><head><meta charset="utf-8"><title>How the MNIST network works</title>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How the Network Works</title>
 <style>
   .card .bars { width: 100%; height: auto; display: block; }
   @page { size: A4 landscape; margin: 0; }
@@ -527,13 +529,40 @@ const html = `<!doctype html>
   .tile { flex: 1; border: 1px solid ${C.grid}; border-radius: 8px; padding: 10px 14px; background: ${C.surface}; }
   .tile .v { font-size: 24px; font-weight: 650; }
   .tile .l { font-size: 11.5px; color: ${C.ink2}; }
+  .topbar { display: none; }
+
+  /* On screen: pages become cards in a scrolling document. */
+  @media screen {
+    body { background: ${C.neutral}; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; max-width: 297mm; margin: 0 auto; padding: 16px 16px 0; font-size: 14px; }
+    .topbar a { color: ${C.series}; font-weight: 600; text-decoration: none; }
+    .topbar a:hover { text-decoration: underline; }
+    .topbar span { color: ${C.muted}; }
+    .page { width: auto; max-width: 297mm; height: auto; margin: 16px auto; padding: 36px 40px 22px; background: ${C.page}; border: 1px solid ${C.grid}; border-radius: 12px; overflow: visible; }
+    .foot { margin-top: 24px; }
+    .grids svg { max-width: 100%; height: auto; }
+  }
+
+  @media screen and (max-width: 900px) {
+    .page { margin: 12px 8px; padding: 22px 16px 16px; }
+    .row { flex-direction: column; gap: 24px; }
+    .wide { overflow-x: auto; }
+    .wide > svg { min-width: 720px; }
+    .feats { grid-template-columns: repeat(6, 1fr); }
+    .cards { grid-template-columns: repeat(2, 1fr); }
+    .tiles, .legend { flex-wrap: wrap; }
+    .tile { flex: 1 1 40%; }
+    .foot { flex-direction: column; gap: 4px; }
+  }
 </style></head><body>
+
+<nav class="topbar"><a href="/">← Try the digit classifier</a><span>nn-js</span></nav>
 
 <section class="page">
   <p class="kicker">nn-js · MNIST digit classifier</p>
   <h1>How the network reads a handwritten digit</h1>
   <p class="lede">A fully connected network turns 784 pixel brightnesses into 10 probabilities. Each layer multiplies the previous layer by a weight matrix, adds a bias, and applies an activation. Below, real test image #${SAMPLE_INDEX} (a ${sampleLabel}) flows through the trained model. It predicts <b>${samplePred}</b> with ${pct(sampleProbs[samplePred]!, 2)} confidence.</p>
-  <div style="flex:1;min-height:0">${architectureSvg()}</div>
+  <div class="wide" style="flex:1;min-height:0">${architectureSvg()}</div>
   <div class="legend">
     <span><i class="sw" style="background:${DIV_POS[3]}"></i>positive weight</span>
     <span><i class="sw" style="background:${DIV_NEG[3]}"></i>negative weight</span>
@@ -644,16 +673,19 @@ const html = `<!doctype html>
 </body></html>`;
 
 await Bun.write(HTML_PATH, html);
+console.log(`Wrote ${HTML_PATH}`);
 
-const chrome = ["google-chrome", "chromium", "chromium-browser"].find((c) => Bun.which(c));
-if (!chrome) throw new Error(`No Chrome/Chromium found; open ${HTML_PATH} and print it to PDF manually.`);
-const proc = Bun.spawnSync([
-  chrome,
-  "--headless",
-  "--disable-gpu",
-  "--no-pdf-header-footer",
-  `--print-to-pdf=${PDF_PATH}`,
-  `file://${process.cwd()}/${HTML_PATH}`,
-]);
-if (proc.exitCode !== 0) throw new Error(`Chrome failed: ${proc.stderr.toString()}`);
-console.log(`Wrote ${PDF_PATH}`);
+if (process.argv.includes("--pdf")) {
+  const chrome = ["google-chrome", "chromium", "chromium-browser"].find((c) => Bun.which(c));
+  if (!chrome) throw new Error(`No Chrome/Chromium found; open ${HTML_PATH} and print it to PDF manually.`);
+  const proc = Bun.spawnSync([
+    chrome,
+    "--headless",
+    "--disable-gpu",
+    "--no-pdf-header-footer",
+    `--print-to-pdf=${PDF_PATH}`,
+    `file://${process.cwd()}/${HTML_PATH}`,
+  ]);
+  if (proc.exitCode !== 0) throw new Error(`Chrome failed: ${proc.stderr.toString()}`);
+  console.log(`Wrote ${PDF_PATH}`);
+}

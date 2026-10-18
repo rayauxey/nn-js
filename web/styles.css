@@ -61,6 +61,22 @@ h2 {
   line-height: 1.5;
 }
 
+.lede + .doc-link {
+  display: inline-block;
+  margin: -12px 0 24px;
+}
+
+.doc-link {
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.doc-link:hover {
+  text-decoration: underline;
+}
+
 .layout {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));

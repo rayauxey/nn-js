@@ -34,9 +34,9 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 .DS_Store
 
 
-# MNIST data, training history and generated report
-# (model.json is committed: the Vercel build needs it)
+# MNIST data, training history and optional PDF export
+# (model.json and nn-visualization.html are committed: the Vercel build needs them)
 data
 history.json
-nn-visualization.html
+nn-visualization.pdf
 .vercel
