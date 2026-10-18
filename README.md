@@ -2,6 +2,20 @@
 
 A fully connected neural network in TypeScript (no ML libraries) that classifies MNIST digits.
 
+**Network:** 784 → 256 (ReLU) → 128 (ReLU) → 10 (softmax), He init, dropout 0.2, Adam (lr 0.001), batch size 64, cross-entropy loss.
+
 ```bash
 bun install
+bun run train      # downloads MNIST into data/ on first run, saves model.json
+bun run evaluate   # test accuracy + a few ASCII-rendered predictions
 ```
+
+Set `EPOCHS=3 bun run train` for a quicker run. Expected test accuracy is ~98%.
+
+## Layout
+
+- `src/mlp.ts` – network: forward pass, backprop, Adam, save/load
+- `src/mnist.ts` – downloads and parses the IDX files
+- `src/train.ts` – training loop with validation split and best-checkpoint saving
+- `src/evaluate.ts` – accuracy helper and evaluation CLI
+- `src/random.ts` – seeded RNG (uniform, gaussian, shuffle)
